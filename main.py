@@ -1,10 +1,19 @@
 from discord.ext import commands
 import os
+import json
+import discord
 
-client = commands.Bot(command_prefix = "!")
+intents = discord.Intents.default()
+intents.members = True
+
+client = commands.Bot(command_prefix='&', intents=intents)
+
 
 for f in os.listdir("./cogs"):
 	if f.endswith(".py"):
 		client.load_extension("cogs." + f[:-3])
 
-client.run("OTczMDUwMDg1NTM5NzM3NjAw.GP1i4Z.Jl7hwkqX803LASe8MSsnK8PjDYRceGT-vZqKS4")
+with open('./data/token.json', 'r') as f:
+    data = json.load(f)
+
+client.run(data['token'])

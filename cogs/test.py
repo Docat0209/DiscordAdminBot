@@ -9,8 +9,10 @@ class Test(commands.Cog):
 		print("on_ready")
 	
 	@commands.command()
-	async def command(self, ctx):
-		print("command")
+	async def command(self, ctx , list:list):
+		print(list)
+		await ctx.message.delete()
+
 
 def setup(client):
 	client.add_cog(Test(client))
