@@ -1,7 +1,10 @@
+from enum import Flag
 import discord
 import json
 from discord.ext import commands
 from discord import RawReactionActionEvent
+import emoji
+import re
 
 
 class ReactionRole(commands.Cog):
@@ -37,25 +40,47 @@ class ReactionRole(commands.Cog):
     #---綁定互動表情身分組---
     @commands.command()
     @commands.has_role(848555690292150273)
-    async def reaction_role(self, ctx, message_id:int ,emoji:str, roles:discord.Role):
+    async def reaction_role(self, ctx,*arg):
+        
+        if ctx.message.reference is None :
+            await ctx.send("you need to reply the message you want to add reaction_role")
+            await ctx.message.delete()
+            return
+
+        if len(arg)%2 != 0:
+            await ctx.send("wrong format")
+            await ctx.message.delete()
+            return
+        
+        for i in range(int(len(arg)/2)):
+            if(not (is_emoji(arg[i*2]) or is_discord_emoji(arg[i*2])) ):
+                await ctx.send("wrong format")
+                await ctx.message.delete()
+                return
+
+            if(not is_discord_role(arg[i*2+1])):
+                await ctx.send("wrong format")
+                await ctx.message.delete()
+                return
+
+        message_id = ctx.message.reference.message_id
 
         with open('./data/reaction_role.json','r+') as file:
             data = json.load(file)
+            message =  await ctx.fetch_message(message_id)
 
             if message_id not in data:
                 data.update({str(message_id):{}})
+            
+            for i in range(int(len(arg)/2)):
+                role = discord.utils.get(ctx.guild.roles, id=int(arg[i*2+1][3:-1]))
+                data[str(message_id)].update({arg[i*2]:str(role)})
+                await message.add_reaction(arg[i*2])
                 
-            data[str(message_id)].update({str(emoji):str(roles)})
             file.seek(0)
             json.dump(data, file, indent = 4)
-        
-        await ctx.message.delete()
 
-    #---機器人按表情---
-    @commands.command()
-    async def add_emoji(self,ctx,message_id:int , emoji:str):
-        message =  await ctx.fetch_message(message_id)
-        await message.add_reaction(emoji)
+        
         await ctx.message.delete()
 
     #---報錯區域---
@@ -64,15 +89,8 @@ class ReactionRole(commands.Cog):
         if ("is required to run this command." in str(error)):
             await ctx.send("you dont have permission")
         else:
-            await ctx.send("try to use &reaction_role message_id emoji roles")
+            await ctx.send(error)
 
-    @on_raw_reaction_add.error
-    async def on_raw_reaction_add_error(self, ctx, error):
-        await ctx.send("please check your bot permission is bigger than the role you want to get")
-
-    @on_raw_reaction_remove.error
-    async def on_raw_reaction_remove_error(self, ctx, error):
-        await ctx.send("please check your bot permission is bigger than the role you want to get")
 
 
 def setup(client):
@@ -80,3 +98,14 @@ def setup(client):
     with open('./data/reaction_role.json', 'r') as f:
         data = json.load(f)
     client.add_cog(ReactionRole(client))
+
+def is_emoji(s):
+    return s in emoji.UNICODE_EMOJI_ENGLISH
+
+def is_discord_emoji(s):
+	matched = re.match("^<:[a-z0-9_]+:[0-9]+>", s)
+	return bool(matched)
+
+def is_discord_role(s):
+	matched = re.match("^<@&[0-9]+>", s)
+	return bool(matched)
