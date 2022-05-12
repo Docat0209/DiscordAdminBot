@@ -1,4 +1,3 @@
-from enum import Flag
 import discord
 import json
 from discord.ext import commands
@@ -103,7 +102,7 @@ def is_emoji(s):
     return s in emoji.UNICODE_EMOJI_ENGLISH
 
 def is_discord_emoji(s):
-	matched = re.match("^<:[a-z0-9_]+:[0-9]+>", s)
+	matched = re.match("^<:[a-z0-9_A-Z]+:[0-9]+>", s)
 	return bool(matched)
 
 def is_discord_role(s):
