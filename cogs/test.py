@@ -1,6 +1,8 @@
+from email import message
 from discord.ext import commands
 import emoji
 import discord
+from datetime import datetime
 import re
 
 class Test(commands.Cog):
@@ -12,11 +14,13 @@ class Test(commands.Cog):
 		print("on_ready")
 	
 	@commands.command()
-	async def command(self, ctx ):
-		print(ctx.message.reference)
-		if ctx.message.reference is not None  :
-			print("True")
-
+	async def command(self, ctx , message_id , emoji1):
+		message = await ctx.fetch_message(message_id)
+		reaction = discord.utils.get(message.reactions, emoji=emoji1)
+      	# Now you can get reaction.count for the custom emoji!
+		if(reaction):
+			print(f'The reaction count for this custom emoji is: {reaction.count}.')
+	
 
 
 def setup(client):
