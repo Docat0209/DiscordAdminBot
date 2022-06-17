@@ -21,7 +21,7 @@ class ReactionRole(commands.Cog):
 
         path = './data/reaction_role.json'
         data = load_json(path)
-        print("recation role")
+        print("recation_role online")
 
     #---互動表情新增身分組---
     @commands.Cog.listener()

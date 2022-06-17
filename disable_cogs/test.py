@@ -11,13 +11,11 @@ class Test(commands.Cog):
 	async def on_ready(self):
 		print("test online")
 
-	@commands.command()
-	async def command(self, ctx , message_id , emoji1):
-		message = await ctx.fetch_message(message_id)
-		reaction = discord.utils.get(message.reactions, emoji=emoji1)
-      	# Now you can get reaction.count for the custom emoji!
-		if(reaction):
-			print(f'The reaction count for this custom emoji is: {reaction.count}.')
+	@commands.Cog.listener()
+	async def on_voice_state_update(self,member, before, after):
+		print(member , before ,after)
+		print(after.channel.id)
+		print(after.channel.category.id)
 	
 
 
