@@ -27,7 +27,7 @@ class ReactionRole(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self , payload: RawReactionActionEvent):
         global data , path
-        
+
         if str(payload.message_id) not in data:
             return
         
@@ -80,7 +80,9 @@ class ReactionRole(commands.Cog):
 
         message =  await ctx.fetch_message(message_id)
 
-        if message_id not in data:
+        data = load_json(path)
+
+        if str(message_id) not in data:
             data.update({str(message_id):{}})
             data = write_json(path,data)
         
