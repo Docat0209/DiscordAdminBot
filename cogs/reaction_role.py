@@ -6,8 +6,11 @@ import emoji
 import re
 
 
-class ReactionRole(commands.Cog):
+path = ""
+data = None
 
+class ReactionRole(commands.Cog):
+    
     def __init__(self, client):
         self.client = client # sets the client variable so we can use it in cogs'
         self._last_member = None
@@ -15,20 +18,16 @@ class ReactionRole(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         global data , path
+
         path = './data/reaction_role.json'
         data = load_json(path)
+        print("recation role")
 
     #---互動表情新增身分組---
     @commands.Cog.listener()
     async def on_raw_reaction_add(self , payload: RawReactionActionEvent):
+        global data , path
         
-        
-        try:
-            data
-        except NameError:
-            path = './data/reaction_role.json'
-            data = load_json(path)
-
         if str(payload.message_id) not in data:
             return
         
@@ -39,13 +38,8 @@ class ReactionRole(commands.Cog):
     #---互動表情移除身分組---
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self , payload: RawReactionActionEvent):
-        
-        try:
-            data
-        except NameError:
-            path = './data/reaction_role.json'
-            data = load_json(path)
-        
+        global data , path
+
         if str(payload.message_id) not in data:
             return
 
@@ -58,13 +52,8 @@ class ReactionRole(commands.Cog):
     @commands.command()
     @commands.has_role(848555690292150273)
     async def reaction_role(self, ctx,*arg):
+        global data , path
 
-        try:
-            data
-        except NameError:
-            path = './data/reaction_role.json'
-            data = load_json(path)
-            
         if ctx.message.reference is None :
             await ctx.send("you need to reply the message you want to add reaction_role")
             await ctx.message.delete()
@@ -126,6 +115,7 @@ def is_discord_emoji(s):
 def is_discord_role(s):
 	matched = re.match("^<@&[0-9]+>", s)
 	return bool(matched)
+    
 
 def write_json(path ,data):
 

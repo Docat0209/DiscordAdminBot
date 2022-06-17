@@ -1,8 +1,6 @@
-from email import message
 from discord.ext import commands
 import emoji
 import discord
-from datetime import datetime
 import re
 
 class Test(commands.Cog):
@@ -11,8 +9,8 @@ class Test(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_ready(self):
-		print("on_ready")
-	
+		print("test online")
+
 	@commands.command()
 	async def command(self, ctx , message_id , emoji1):
 		message = await ctx.fetch_message(message_id)

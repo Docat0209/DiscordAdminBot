@@ -9,6 +9,9 @@ import emoji
 import re
 
 
+path = ""
+data = None
+
 class Vote(commands.Cog):
 
     def __init__(self, client):
@@ -20,19 +23,13 @@ class Vote(commands.Cog):
         global data , path
         path = './data/vote.json'
         data = load_json(path)
-        print("vote")
+        print("vote online")
 
     @commands.command()
     async def vote(self, ctx, title , time:int ,*arg):
-        
-        print("votecommand")
-        
-        try:
-            data
-        except NameError:
-            path = './data/vote.json'
-            data = load_json(path)
+        global data , path
 
+        #---Check format---
         if time <= 0:
             await ctx.send("wrong format")
             await ctx.message.delete()
@@ -49,12 +46,14 @@ class Vote(commands.Cog):
                 await ctx.message.delete()
                 return
 
+        #---Send vote message---
         embed=discord.Embed(title="", description="尚未啟用的投票" ,color=0x2ecc71)
 
         message = await ctx.send(embed=embed)
 
         message_id = message.id
 
+        #---Save vote data to json---
         if message_id not in data:
             data.update({str(message_id):{}})
             data = write_json(path,data)
@@ -69,17 +68,19 @@ class Vote(commands.Cog):
         
         await ctx.message.delete()
 
+        #---Time Listener---
         while (1):
-
+            #---Get data---
             try:
                 data
             except NameError:
                 path = './data/vote.json'
                 data = load_json(path)
 
+            #---Check data---
             if(data[str(message_id)]["time"] == 0):
+                #---Vote result---
                 message = await ctx.fetch_message(message_id)
-
                 h_emoji = ""
                 h_count = 0
 
@@ -99,32 +100,32 @@ class Vote(commands.Cog):
 
                 string = "**投票**\n"+title+"\n\n**結果**\n"
 
-
-                print(h_emoji)
                 for i in h_emoji.split("#"):
                     string = string + data[str(message_id)][i] +f" 獲得最高票"+ "\n"
+
                 embed=discord.Embed(title="", description= string ,color=0x2ecc71)
                 embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
                 await message.edit(embed=embed)
                 data.pop(str(message_id),None)
                 data = write_json(path,data)
                 break
-            
 
-            string = "**投票**\n"+title+"\n\n**選項**\n"
-            for i in range(int(len(arg)/2)):
-                string = string + arg[i*2] + "：" + arg[i*2+1] + "\n"
+            else:
+                #---Update data---
+                string = "**投票**\n"+title+"\n\n**選項**\n"
+                for i in range(int(len(arg)/2)):
+                    string = string + arg[i*2] + "：" + arg[i*2+1] + "\n"
 
-            string = string + "\n**相關資訊**\n⏰  投票剩餘 `"+str(int(int(data[str(message_id)]["time"]/24)))+"天"+str(int(data[str(message_id)]["time"])%24)+"小時`"
-            embed=discord.Embed(title="", description=string ,color=0x2ecc71)
-            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+                string = string + "\n**相關資訊**\n⏰  投票剩餘 `"+str(int(int(data[str(message_id)]["time"]/24)))+"天"+str(int(data[str(message_id)]["time"])%24)+"小時`"
+                embed=discord.Embed(title="", description=string ,color=0x2ecc71)
+                embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
 
-            await message.edit(embed=embed)
+                await message.edit(embed=embed)
 
-            data[str(message_id)].update({"time":data[str(message_id)]["time"]-1})
-            data = write_json(path,data)
+                data[str(message_id)].update({"time":data[str(message_id)]["time"]-1})
+                data = write_json(path,data)
 
-            await asyncio.sleep(3600)
+                await asyncio.sleep(3600)
 
 
     #---報錯區域---

@@ -19,6 +19,9 @@ class Poe(commands.Cog):
 		print("poe_trade_track online")
 		global data , path , driver
 		path = './data/poe_trade.json'
+
+		await asyncio.sleep(10)
+
 		driver = webdriver.Edge(executable_path="driver\msedgedriver.exe")
 
 		while (1):  
