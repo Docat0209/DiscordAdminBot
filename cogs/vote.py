@@ -70,13 +70,6 @@ class Vote(commands.Cog):
 
         #---Time Listener---
         while (1):
-            #---Get data---
-            try:
-                data
-            except NameError:
-                path = './data/vote.json'
-                data = load_json(path)
-
             #---Check data---
             if(data[str(message_id)]["time"] == 0):
                 #---Vote result---

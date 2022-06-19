@@ -7,6 +7,7 @@
 - Poe 交易追蹤
 - 隨機分組
 - 自動擴充頻道
+- 活動計數器
 
 ## 開發中功能
 
@@ -29,6 +30,8 @@
     &vote 'question' 'hour' *'option_emoji' 'option_content'
 ### 隨機分組
     &random_team *'name'
+### 活動計數器
+    &event_host 'title' 'goal' 'hour'
 
 ## 遊戲工具
 
