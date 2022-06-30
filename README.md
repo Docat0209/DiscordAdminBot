@@ -57,11 +57,11 @@ To run this project, you will need to add the following environment variables to
 
 `API_KEY`
 
-## Usage/Examples
+## Usage
 
-After config.py setucompleted open server.bat and you can use this bot on discord.
+After config.py setup completed open server.bat and you can use this bot on discord.
 
-## Command
+## Command/Examples
 
 ### instructions
 
@@ -110,7 +110,7 @@ command
 example
 
 ```bash
-  &vote @user1 @user2 @user3 @user4 @user5 @user6
+  &random_team @user1 @user2 @user3 @user4 @user5 @user6
 ```
 
 ### Event counter
