@@ -1,4 +1,3 @@
-from multiprocessing import context
 from discord.ext import commands
 import emoji
 import discord

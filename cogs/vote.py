@@ -1,10 +1,7 @@
-from enum import Flag
-from turtle import color
 import discord
 import json
 import asyncio
 from discord.ext import commands
-from discord import RawReactionActionEvent
 import emoji
 import re
 
