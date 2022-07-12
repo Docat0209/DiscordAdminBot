@@ -1,6 +1,3 @@
-from cmath import e
-from email import message
-from sys import flags
 from discord.ext import commands
 import discord
 import json
