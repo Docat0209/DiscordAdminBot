@@ -1,3 +1,5 @@
+from cmath import e
+from email import message
 from sys import flags
 from discord.ext import commands
 import discord
@@ -58,16 +60,32 @@ class VoiceChannelExtend(commands.Cog):
 	
 		if(flags_before):
 			for i in range(len(data[category_id_before]["channel_id"])-1)[::-1]:
+
+				if discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])) == None:
+					data[category_id_before]["channel_id"].pop(i)
+					data = write_json(path,data)
+					continue
+
 				members = discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])).members
 				if(members == []):
 					channel_id = data[category_id_before]["channel_id"][i]
+					while discord.Client.get_channel(self.client,int(channel_id)):
+						await discord.Client.get_channel(self.client,int(channel_id)).delete()
 					data[category_id_before]["channel_id"].pop(i)
 					data = write_json(path,data)
-					await discord.Client.get_channel(self.client,int(channel_id)).delete()
 					
 			for i in range(len(data[category_id_before]["channel_id"]))[::-1]:
+
+				if discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])) == None:
+					data[category_id_before]["channel_id"].pop(i)
+					data = write_json(path,data)
+					continue
+
 				channel_id = data[category_id_before]["channel_id"][i]
 				await discord.Client.get_channel(self.client,int(channel_id)).edit(name=data[category_id_before]["channel_name"]+" - "+str(data[category_id_before]["channel_id"].index(channel_id)+1))
+				print(channel_id , data[category_id_before]["channel_name"]+" - "+str(data[category_id_before]["channel_id"].index(channel_id)+1))
+
+
 
 
 

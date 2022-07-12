@@ -36,21 +36,7 @@ class EventHost(commands.Cog):
             data[str(payload.message_id)]["members"].append(str(payload.user_id))
             data = write_json(path,data)
 
-            join_members = ""
-            for i in data[str(payload.message_id)]["members"]:
-                join_members = join_members + f"<@{i}>\n"
-
-            if join_members == "":
-                join_members = "尚未有人加入"
-
-            embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
-            embed.add_field(name="活動名稱", value=data[str(payload.message_id)]["title"] , inline=False)
-            embed.add_field(name="目標人數", value=data[str(payload.message_id)]["goal"] , inline=True)
-            time_string = str(int(int(data[str(payload.message_id)]["time"]/24)))+"天"+str(int(data[str(payload.message_id)]["time"])%24)+"小時"
-            if int(int(data[str(payload.message_id)]["time"]/24)) + int(data[str(payload.message_id)]["time"])%24 == 0:
-                    time_string = "小於1小時"
-            embed.add_field(name="剩餘時間", value= time_string , inline=True)
-            embed.add_field(name="目前參與人員", value=join_members , inline=False)
+            embed = refresh_embed(data , payload.message_id)
 
             channel = self.client.get_channel(payload.channel_id)
             message = await channel.fetch_message(payload.message_id)
@@ -58,18 +44,7 @@ class EventHost(commands.Cog):
 
         if len(data[str(payload.message_id)]["members"]) >= int(data[str(payload.message_id)]["goal"]):
 
-            join_members = ""
-            for i in data[str(payload.message_id)]["members"]:
-                join_members = join_members + f"<@{i}>\n"
-
-            if join_members == "":
-                join_members = "尚未有人加入"
-
-            embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
-            embed.add_field(name="活動名稱", value=data[str(payload.message_id)]["title"] , inline=False)
-            embed.add_field(name="目標人數", value=data[str(payload.message_id)]["goal"] , inline=True)
-            embed.add_field(name="活動結果", value="人數達標" , inline=True)
-            embed.add_field(name="參與人員", value=join_members , inline=False)
+            embed = refresh_embed(data , payload.message_id)
 
             channel = self.client.get_channel(payload.channel_id)
             message = await channel.fetch_message(payload.message_id)
@@ -91,22 +66,8 @@ class EventHost(commands.Cog):
         if str(payload.emoji) == "✅":
             data[str(payload.message_id)]["members"].remove(str(payload.user_id))
             data = write_json(path,data)
-        
-            join_members = ""
-            for i in data[str(payload.message_id)]["members"]:
-                join_members = join_members + f"<@{i}>\n"
 
-            if join_members == "":
-                join_members = "尚未有人加入"
-
-            embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
-            embed.add_field(name="活動名稱", value=data[str(payload.message_id)]["title"] , inline=False)
-            embed.add_field(name="目標人數", value=data[str(payload.message_id)]["goal"] , inline=True)
-            time_string = str(int(int(data[str(payload.message_id)]["time"]/24)))+"天"+str(int(data[str(payload.message_id)]["time"])%24)+"小時"
-            if int(int(data[str(payload.message_id)]["time"]/24)) + int(data[str(payload.message_id)]["time"])%24 == 0:
-                    time_string = "小於1小時"
-            embed.add_field(name="剩餘時間", value= time_string , inline=True)
-            embed.add_field(name="目前參與人員", value=join_members , inline=False)
+            embed = refresh_embed(data , payload.message_id)
 
             channel = self.client.get_channel(payload.channel_id)
             message = await channel.fetch_message(payload.message_id)
@@ -141,18 +102,7 @@ class EventHost(commands.Cog):
             if(data[str(message_id)]["time"] == 0):
                 message = await ctx.fetch_message(message_id)
 
-                join_members = ""
-                for i in data[str(message_id)]["members"]:
-                    join_members = join_members + f"<@{i}>\n"
-
-                if join_members == "":
-                    join_members = "尚未有人加入"
-
-                embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
-                embed.add_field(name="活動名稱", value=title , inline=False)
-                embed.add_field(name="目標人數", value=str(goal) , inline=True)
-                embed.add_field(name="剩餘時間", value="已超時", inline=True)
-                embed.add_field(name="目前參與人員", value=join_members , inline=False)
+                embed = refresh_embed(data , message_id , True)
 
                 await message.edit(embed=embed)
                 data.pop(str(message_id),None)
@@ -162,32 +112,37 @@ class EventHost(commands.Cog):
             else:
                 message = await ctx.fetch_message(message_id)
 
-                join_members = ""
-                for i in data[str(message_id)]["members"]:
-                    join_members = join_members + f"<@{i}>\n"
-
-                if join_members == "":
-                    join_members = "尚未有人加入"
-
-                embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
-                embed.add_field(name="活動名稱", value=title , inline=False)
-                embed.add_field(name="目標人數", value=str(goal) , inline=True)
-                time_string = "`"+str(int(int(data[str(message_id)]["time"]/24)))+"`天`"+str(int(data[str(message_id)]["time"])%24)+"`小時"
-                if int(int(data[str(message_id)]["time"]/24)) + int(data[str(message_id)]["time"])%24 == 0:
-                    time_string = "小於1小時"
-                embed.add_field(name="剩餘時間", value= time_string , inline=True)
-                embed.add_field(name="目前參與人員", value=join_members , inline=False)
+                embed = refresh_embed(data , message_id)
 
                 await message.edit(embed=embed)
-
                 data[str(message_id)].update({"time":data[str(message_id)]["time"]-1})
                 data = write_json(path,data)
 
                 await asyncio.sleep(3600)
 
 
+def refresh_embed(data , message_id , timeout = False):
+    join_members = ""
+    for i in data[str(message_id)]["members"]:
+        join_members = join_members + f"<@{i}>\n"
 
-		
+    if join_members == "":
+        join_members = "尚未有人加入"
+
+    embed=discord.Embed(title="參加活動", description="" ,color=0x2ecc71)
+    embed.add_field(name="活動名稱", value=data[str(message_id)]["title"] , inline=False)
+    embed.add_field(name="目標人數", value=data[str(message_id)]["goal"] , inline=True)
+    time_string = "`"+str(int(int(data[str(message_id)]["time"]/24)))+"`天`"+str(int(data[str(message_id)]["time"])%24)+"`小時"
+    if int(int(data[str(message_id)]["time"]/24)) + int(data[str(message_id)]["time"])%24 == 0:
+        time_string = "小於1小時"
+
+    if timeout:
+        time_string = "已超時"
+
+    embed.add_field(name="剩餘時間", value= time_string , inline=True)
+    embed.add_field(name="目前參與人員", value=join_members , inline=False)
+
+    return embed
 
 
 def setup(client):
