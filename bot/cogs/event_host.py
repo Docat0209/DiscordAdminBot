@@ -19,7 +19,7 @@ class EventHost(commands.Cog):
     async def on_ready(self):
         global data , path
 
-        path = './data/event_host.json'
+        path = 'bot/data/event_host.json'
         data = load_json(path)
         print("event_host online")
 

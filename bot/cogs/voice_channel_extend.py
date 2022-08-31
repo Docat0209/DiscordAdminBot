@@ -13,7 +13,7 @@ class VoiceChannelExtend(commands.Cog):
 	async def on_ready(self):
 		global data , path
 
-		path = './data/voice_channel_extend.json'
+		path = 'bot/data/voice_channel_extend.json'
 		data = load_json(path)
 		print("voice_channel_extend online")
 

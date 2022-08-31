@@ -19,7 +19,7 @@ class ReactionRole(commands.Cog):
     async def on_ready(self):
         global data , path
 
-        path = './data/reaction_role.json'
+        path = 'bot/data/reaction_role.json'
         data = load_json(path)
         print("recation_role online")
 

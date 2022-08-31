@@ -18,7 +18,7 @@ class Vote(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         global data , path
-        path = './data/vote.json'
+        path = 'bot/data/vote.json'
         data = load_json(path)
         print("vote online")
 
