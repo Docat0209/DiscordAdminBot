@@ -1,3 +1,4 @@
+from tokenize import Token
 from discord.ext import commands
 import os
 import json
@@ -17,6 +18,6 @@ async def load_extensions():
 async def main():
     async with client:
         await load_extensions()
-        await client.start("OTczMDUwMDg1NTM5NzM3NjAw.GR-Bfq.UjJm14yphxG2NieVDV7Bd91qeX2npi0ULT2En8")
+        await client.start(TOKEN)
 
 asyncio.run(main())
