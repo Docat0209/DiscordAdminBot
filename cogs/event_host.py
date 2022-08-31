@@ -144,8 +144,8 @@ def refresh_embed(data , message_id , timeout = False):
     return embed
 
 
-def setup(client):
-    client.add_cog(EventHost(client))
+async def setup(client):
+    await client.add_cog(EventHost(client))
 
 def is_emoji(s):
     return s in emoji.UNICODE_EMOJI_ENGLISH

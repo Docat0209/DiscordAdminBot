@@ -1,10 +1,14 @@
 {
     "987219090752016424": {
         "channel_name": "休閒聊天區",
-        "channel_id": []
+        "channel_id": [
+            "1014126328326410250"
+        ]
     },
     "848558843780399144": {
         "channel_name": "GamingRoom",
-        "channel_id": []
+        "channel_id": [
+            "1014030229754359818"
+        ]
     }
 }

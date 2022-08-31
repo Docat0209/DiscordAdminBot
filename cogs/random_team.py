@@ -32,5 +32,5 @@ class RandomTeam(commands.Cog):
 		await ctx.send(embed=embed)
 		await ctx.message.delete()
 	
-def setup(client):
-	client.add_cog(RandomTeam(client))
+async def setup(client):
+	await client.add_cog(RandomTeam(client))

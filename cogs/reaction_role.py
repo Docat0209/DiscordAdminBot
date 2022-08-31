@@ -104,8 +104,8 @@ class ReactionRole(commands.Cog):
 
 
 
-def setup(client):
-    client.add_cog(ReactionRole(client))
+async def setup(client):
+    await client.add_cog(ReactionRole(client))
 
 def is_emoji(s):
     return s in emoji.UNICODE_EMOJI_ENGLISH

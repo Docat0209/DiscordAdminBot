@@ -125,8 +125,8 @@ class Vote(commands.Cog):
 
 
 
-def setup(client):
-    client.add_cog(Vote(client))
+async def setup(client):
+    await client.add_cog(Vote(client))
 
 def is_emoji(s):
     return s in emoji.UNICODE_EMOJI_ENGLISH

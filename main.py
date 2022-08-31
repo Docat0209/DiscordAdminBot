@@ -2,13 +2,24 @@ from discord.ext import commands
 import os
 import json
 import discord
+import asyncio
 from alive_progress import alive_bar
+
+async def load_extensions():
+	with alive_bar(toolbar_width) as bar:
+		for filename in os.listdir("./cogs"):
+			if filename.endswith(".py"):
+				await client.load_extension(f"cogs.{filename[:-3]}")
+				bar()
+			
+async def main():
+    async with client:
+        await load_extensions()
+        await client.start("")
 
 intents = discord.Intents.default()
 intents.members = True
-
 client = commands.Bot(command_prefix='&', intents=intents)
-
 
 toolbar_width = 0
 for f in os.listdir("./cogs"):
@@ -17,13 +28,4 @@ for f in os.listdir("./cogs"):
 
 print(f"Loding cogs ({toolbar_width} items)")
 
-with alive_bar(toolbar_width) as bar:
-	for f in os.listdir("./cogs"):
-		if f.endswith(".py"):
-			client.load_extension("cogs." + f[:-3])
-			bar()
-
-with open('./data/token.json', 'r') as f:
-	data = json.load(f)
-
-client.run(data['token'])
+asyncio.run(main())

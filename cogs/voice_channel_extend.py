@@ -39,8 +39,8 @@ class VoiceChannelExtend(commands.Cog):
 			channel = await after.channel.category.create_voice_channel(data[category_id_after]["channel_name"]+" - "+str(len(data[category_id_after]["channel_id"])+1))
 			data[category_id_after]["channel_id"].append(str(channel.id))
 			data = write_json(path,data)
-
-
+		
+			
 		flags_before = True	
 
 		if before.channel == None:
@@ -57,37 +57,21 @@ class VoiceChannelExtend(commands.Cog):
 	
 		if(flags_before):
 			for i in range(len(data[category_id_before]["channel_id"])-1)[::-1]:
-
-				if discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])) == None:
-					data[category_id_before]["channel_id"].pop(i)
-					data = write_json(path,data)
-					continue
-
+				next_members = discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i+1])).members
 				members = discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])).members
-				if(members == []):
-					channel_id = data[category_id_before]["channel_id"][i]
-					while discord.Client.get_channel(self.client,int(channel_id)):
-						await discord.Client.get_channel(self.client,int(channel_id)).delete()
-					data[category_id_before]["channel_id"].pop(i)
+
+				if(members == [] and next_members == []):
+					await discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i+1])).delete()
+					data[category_id_before]["channel_id"].pop(i+1)
 					data = write_json(path,data)
-					
-			for i in range(len(data[category_id_before]["channel_id"]))[::-1]:
-
-				if discord.Client.get_channel(self.client,int(data[category_id_before]["channel_id"][i])) == None:
-					data[category_id_before]["channel_id"].pop(i)
-					data = write_json(path,data)
-					continue
-
-				channel_id = data[category_id_before]["channel_id"][i]
-				await discord.Client.get_channel(self.client,int(channel_id)).edit(name=data[category_id_before]["channel_name"]+" - "+str(data[category_id_before]["channel_id"].index(channel_id)+1))
-				print(channel_id , data[category_id_before]["channel_name"]+" - "+str(data[category_id_before]["channel_id"].index(channel_id)+1))
+				else:
+					return
 
 
 
 
-
-def setup(client):
-	client.add_cog(VoiceChannelExtend(client))
+async def setup(client):
+	await client.add_cog(VoiceChannelExtend(client))
 
 def write_json(path ,data):
 
