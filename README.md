@@ -2,6 +2,7 @@
 English | [繁體中文](README.zh-TW.md)
 
 # Discord Admin Bot
+[![Coverage Status](https://coveralls.io/repos/github/Docat0209/DiscordAdminBot/badge.svg?branch=master)](https://coveralls.io/github/Docat0209/DiscordAdminBot?branch=master)
 
 This bot is design to manage the discord server automatic. 
 
